@@ -49,11 +49,10 @@ while True:
     delta = b**2-4*a*c
     if delta < 0:
         print("The value for delta is negative, the inputs are invalid.")
-        break
-    else:
-        x1 = (-b+math.sqrt(delta))/2*a
-        x2 = (-b-math.sqrt(delta))/2*a
-        print(f"delta = {delta}, x' = {x1}, x\" = {x2}")
+
+    x1 = (-b+math.sqrt(delta))/2*a
+    x2 = (-b-math.sqrt(delta))/2*a
+    print(f"delta = {delta}, x' = {x1}, x\" = {x2}")
 
     print("\nContinue? (y/n)")
     if input("> ").lower() != "y":
