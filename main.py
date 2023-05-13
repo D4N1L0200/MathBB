@@ -2,63 +2,49 @@
 Currently only has a quadratic equation solver, i'll add some physics formulas later
 """
 
-import math
+import os
+from expr_solver import Solver
 
-class Ansi:
-    """"Class to move the console cursor"""
-    def __init__(self):
-        self.save = "\033[s"
-        self.load = "\033[u"
+def main():
+    """Main entry point"""
+    solver = Solver()
 
-    def move_up(self, num = 1):
-        """Moves the console cursor 1 character upwards"""
-        return f"\033[{num}A"
+    while True:
+        os.system("clear")
+        print("    Types                Alias         Expression      Variable to Find")
+        print(" - Quadratic Equation   (q)       =>  ax² + bx + c = 0  =>  x', x\"")
+        print(" - Pythagorean theorem  (p / pc)  =>  a² + b² = c²      =>  c")
+        # print(" -          ||          (pa)      =>  a = √c² - b²      =>  a")
+        # print(" -          ||          (pb)      =>  b = √c² - a²      =>  b")
+        expr_type = input("What is the expression? (Type anything else to exit) ").lower()
+        os.system("clear")
 
-    def move_down(self, num = 1):
-        """Moves the console cursor 1 character downwards"""
-        return f"\033[{num}B"
+        match expr_type:
+            case "q":
+                print("Quadratic equation solver (ax² + bx + c = 0)")
+                print("Type each float in order (a, b, c)")
+                abc = solver.get_vars("nx² + nx + n = 0", "n", float)
+                if abc:
+                    ans = solver.quadratic(abc[0], abc[1], abc[2], True)
+                    if not ans:
+                        print("Delta is negative, the inputs are invalid.")
+                    else:
+                        print(f"delta = {ans[2]}, x' = {ans[0]}, x\" = {ans[1]}")
+            case "p"|"pc":
+                print("Pythagorean theorem solver (a² + b² = c²)")
+                print("Type each float in order (a, b)")
+                ab_vars = solver.get_vars("n² + n² = c²", "n", float)
+                if ab_vars:
+                    ans = solver.pythagorean(ab_vars[0], ab_vars[1])
+                    print(f"c = {ans}")
+            case _:
+                break
 
-    def move_right(self, num = 1):
-        """Moves the console cursor 1 character right"""
-        return f"\033[{num}C"
+        print("\nContinue? (y/n)")
+        if input("> ").lower() != "y":
+            break
 
-    def move_left(self, num = 1):
-        """Moves the console cursor 1 character left"""
-        return f"\033[{num}D"
-
-ANSI = Ansi()
-
-print("Quadratic equation solver")
-print("Type each integer in order (a, b, c)")
-while True:
-    a = input(f"0 = {ANSI.save}")
-    b = input(f"{ANSI.load}{ANSI.move_right(len(a))}x² + {ANSI.save}")
-    c = input(f"{ANSI.load}{ANSI.move_right(len(b))}x + ")
-    print(f"\na = {a}, b = {b}, c = {c}")
-
-    # Full formula => -b+-sqrt(b²-4ac)/2a
-
-    try:
-        a = int(a)
-        b = int(b)
-        c = int(c)
-    except ValueError:
-        print("Some value is not an integer, the inputs are invalid.")
-        break
-
-    delta = b**2-4*a*c
-    if delta < 0:
-        print("The value for delta is negative, the inputs are invalid.")
-
-    x1 = (-b+math.sqrt(delta))/2*a
-    x2 = (-b-math.sqrt(delta))/2*a
-    print(f"delta = {delta}, x' = {x1}, x\" = {x2}")
-
-    print("\nContinue? (y/n)")
-    if input("> ").lower() != "y":
-        break
-
-# Test cases
+# Quadratic Test cases
 
 # a = 1, b = 3, c = -4
 # delta = 25, x' = 1, x" = -4
@@ -68,3 +54,6 @@ while True:
 
 # a = 6, b = -17, c = 12
 # delta = 1, x' = 54, x" = 48
+
+if __name__ == "__main__":
+    main()
